@@ -1,48 +1,95 @@
 """
-Создайте класс банковского аккаунта по аналогии с примером из презентации. Сделайте атрибут name защищенным, а
-balance и pasport приватными.
-Добавьте геттер-методы на pasport и balance. Сделайте смену номера паспорта по поролю. А изменение баланса
-на определенную сумму(сумма не может падать меньше 0, так что сделайте проверку).
-Создайте метод удаляющий паспортные данные с аккаунта(также по поролю).
+В классе Hero из предыдущего занятия добавьте приватное свойство rank.
+Создайте геттер, сеттер и делиттер чтобы можно было получить звание героя, установить звание "Победитель арены"
+в случае победы героя в битве и удалить ранк в случае поражения.
 """
+from random import randint
+from time import sleep
 
 
-class BankAccount():
-    def __init__(self,name, balance, pasport):
-        self._name = name
-        self.__balance = balance
-        self.__pasport = pasport
+class Hero():
+    def __init__(self, name, health, armor, power, weapon, rang):
+        self.name = name
+        self.health = health
+        self.armor = armor
+        self.power = power
+        self.weapon = weapon
+        self.__rang = rang
 
-    def getbalance(self):
-        return self.__balance
+    def print_info(self):
+        sleep(1)
+        print('Поприветствуйте героя:', self.name)
+        sleep(1)
+        print('Уровень здоровья:', self.health)
+        sleep(1)
+        print('Броня:', self.armor)
+        sleep(1)
+        print('Сила удара:', self.power)
+        sleep(1)
+        print('Оружие:', self.weapon, '\n')
 
-    def getpasport(self):
-        return self.__pasport
+    def getrang(self):
+        return self.__rang
 
-    def setpasport(self, newpasport):
-        x = input('Введите пароль: ')
-        if '22312' in x:
-            print('Вызвали сеттер')
-            self.__pasport = newpasport
+    def setrang(self, newrang):
+        self.__rang = newrang
 
-    def setbalance(self, money):
-        if self.__balance + money >= 0:
-            self.__balance += money
+    def delrang(self):
+        del self.__rang
 
-    def deletepasport(self):
-        y = input('Введите пароль: ')
-        if '12345' in y:
-            del self.__pasport
+    def strike_hero(self, rascal):
+        print(
+            'Удар! ' + self.name + ' атакует ' + rascal.name + ' с силой ' + str(self.power) + ', используя '
+            + self.weapon + '\n'
+        )
+        rascal.armor -= self.power
+        if rascal.armor < 0:
+            rascal.health += rascal.armor
+            rascal.armor = 0
+        sleep(2)
+        print(
+            "Класс брони " + rascal.name + ' упал до ' + str(rascal.armor) + ', а количество здоровья уменьшилось до '
+            + str(rascal.health) + '\n'
+        )
 
-acc1 = BankAccount('Игорь', 10000, 21345667)
-print(acc1.getbalance())
-print(acc1.getpasport())
-acc1.setbalance(-5000)
-acc1.setpasport(2314445)
-print(acc1.getbalance())
-print(acc1.getpasport())
-acc1.deletepasport()
-try:
-    print(acc1.getpasport())
-except:
-    print('Паспортные данные были удалены.')
+    def strike_enemy(self, knight):
+        print(
+            'Удар! ' + self.name + ' атакует ' + knight.name + ' с силой ' + str(self.power) + ', используя '
+            + self.weapon + '\n'
+        )
+        knight.armor -= self.power
+        if knight.armor < 0:
+            knight.health += knight.armor
+            knight.armor = 0
+        sleep(2)
+        print(
+            "Класс брони", knight.name, 'упал до ' + str(knight.armor) + ', а количество здоровья уменшьшилось до '
+            + str(knight.health) + '\n'
+        )
+
+
+knight = Hero('Ричард', randint(100, 500), randint(20, 100), randint(5, 200), 'Меч', 'Герой')
+knight.print_info()
+rascal = Hero('Хелен', randint(100, 500), randint(20, 100), randint(5, 200), 'Лук', 'Монстр')
+rascal.print_info()
+while True:
+    if knight.health > 0:
+        sleep(2)
+        knight.strike_hero(rascal)
+    else:
+        sleep(2)
+        print('Монстр победил!')
+        rascal.setrang('Победитель Арены')
+        print(rascal.getrang())
+        knight.delrang()
+        break
+    if rascal.health > 0:
+        sleep(2)
+        rascal.strike_enemy(knight)
+    else:
+        sleep(2)
+        print('Рыцарь победил!')
+        knight.setrang('Победитель Арены')
+        print(knight.getrang())
+        rascal.delrang()
+        break
