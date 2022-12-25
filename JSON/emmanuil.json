@@ -1,0 +1,17 @@
+{
+    "name": "Alina",
+    "age": 27,
+    "countries": {
+        "name": [
+            "Japan",
+            "Russia"
+        ],
+        "time": [
+            26,
+            1
+        ],
+        "cities": [
+            "Itinomia","Tokio", "Kioto","Nagoya","Yakagama"
+        ]
+    }
+}
